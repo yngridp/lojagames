@@ -1,8 +1,10 @@
 package com.generation.lojagames.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +30,7 @@ import jakarta.validation.Valid;
 
 public class CategoriaController {
 
+	@Autowired
 	private CategoriaRepository categoriaRepository;
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getAll(){ 
@@ -44,7 +47,25 @@ public class CategoriaController {
 	@GetMapping("/genero/{genero}") 
 	public ResponseEntity<List<Categoria>> getByGenero(@PathVariable String genero){
 		return ResponseEntity.ok(categoriaRepository.findAllByGeneroContainingIgnoreCase(genero));
-}
+
+	//}
+	
+	//@GetMapping("/precoMaior")
+	// ResponseEntity<List<Categoria>> getCategoriaMaior500(@PathVariable BigDecimal preco) {
+		
+		// if(preco => 500) {
+		// categoriaRepository.findByPrecoGreaterThan(preco);
+		//  }
+		 // else {
+			  
+		//  }
+	}
+	
+	@GetMapping("/precoMenor")
+	public ResponseEntity<List<Categoria>> getCategoriaMenor500(@PathVariable BigDecimal preco) {
+		return ResponseEntity.ok(categoriaRepository.findByPrecoGreaterThan(preco));
+	}
+	
 	 @PostMapping
 		public ResponseEntity<Categoria> post(@Valid @RequestBody Categoria categoria){
 		 return  ResponseEntity.status(HttpStatus.OK).body(categoriaRepository.save(categoria));
