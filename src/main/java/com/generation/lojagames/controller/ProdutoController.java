@@ -1,8 +1,10 @@
 package com.generation.lojagames.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.lojagames.model.Produto;
+import com.generation.lojagames.repository.CategoriaRepository;
 import com.generation.lojagames.repository.ProdutoRepository;
 
 import jakarta.validation.Valid;
@@ -27,8 +30,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/produtos")
 @CrossOrigin(origins = "*", allowedHeaders = "*" )
 public class ProdutoController {
-
+	
+	@Autowired // injeção de dependecia
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
+
 	//CRUD
 	@GetMapping
 	public ResponseEntity<List<Produto>> getAll(){ 
@@ -46,9 +54,11 @@ public class ProdutoController {
 	public ResponseEntity<List<Produto>> getByNome(@PathVariable String nome){
 		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
 }
-   @PostMapping
-	public ResponseEntity<Produto> post(@Valid @RequestBody Produto produto){
-	 return  ResponseEntity.status(HttpStatus.OK).body(produtoRepository.save(produto));
+	@PostMapping
+	public ResponseEntity<Produto> postProduto(@Valid @RequestBody Produto produto){
+		return categoriaRepository.findById(produto.getCategoria().getId())
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto)))
+				.orElse(ResponseEntity.badRequest().build());
 }
    @PutMapping 
    public ResponseEntity<Produto> put(@Valid @RequestBody Produto produto){ 
@@ -68,4 +78,13 @@ public class ProdutoController {
 		produtoRepository.deleteById(id);
    
    }
+   @GetMapping("/precoMenor/{preco}")
+	public ResponseEntity<List<Produto>> getByPrecoMenor(@PathVariable BigDecimal preco){
+		return ResponseEntity.ok(produtoRepository.findByPrecoGreaterThan(preco));
+	}
+	
+	@GetMapping("/precoMaior/{preco}")
+	public ResponseEntity<List<Produto>> getByPrecoMaior(@PathVariable BigDecimal preco){
+		return ResponseEntity.ok(produtoRepository.findByPrecoLessThanEqual(preco));
+	}
 }

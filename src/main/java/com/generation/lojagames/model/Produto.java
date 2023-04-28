@@ -3,8 +3,6 @@ package com.generation.lojagames.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -15,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -33,20 +31,19 @@ public class Produto {
     @Size(max = 1000, message = "O atributo descricao deve ter no máximo 1000 de caracteres.")
 	private String descricao;
 
-	@NotNull
-	@PositiveOrZero
+	@NotNull(message = "O Atributo preço é obrigatório!") 
+	@Positive
 	private BigDecimal preco;
 
-	@UpdateTimestamp
-	private LocalDate dataLancamento;
+	
+	private LocalDate datalancamento;
 	
     @Size(max = 1000, message = "O atributo foto deve ter no máximo 1000 de caracteres.")
 	private String foto;
     
-    @ManyToOne // tipo de relacionamento postagem , um para muitos
-    @JsonIgnoreProperties("produtos")
-	private Produto produto;
-
+    @ManyToOne 
+    @JsonIgnoreProperties("produto")
+	private Categoria categoria;
 
 	public Long getId() {
 		return id;
@@ -80,12 +77,12 @@ public class Produto {
 		this.preco = preco;
 	}
 
-	public LocalDate getDataLancamento() {
-		return dataLancamento;
+	public LocalDate getDatalancamento() {
+		return datalancamento;
 	}
 
-	public void setDataLancamento(LocalDate dataLancamento) {
-		this.dataLancamento = dataLancamento;
+	public void setDatalancamento(LocalDate datalancamento) {
+		this.datalancamento = datalancamento;
 	}
 
 	public String getFoto() {
@@ -96,13 +93,16 @@ public class Produto {
 		this.foto = foto;
 	}
 
-	public Produto getProduto() {
-		return produto;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
-	
-
+    
+    
 }
+
+
+	

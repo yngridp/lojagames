@@ -1,6 +1,5 @@
 package com.generation.lojagames.repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,9 +11,6 @@ public interface CategoriaRepository  extends JpaRepository<Categoria, Long>{
 	
 		List<Categoria> findAllByGeneroContainingIgnoreCase(@Param("genero")String Genero);
 		
-		List<Categoria> findByPrecoGreaterThan(@Param("preco")BigDecimal preco);
-		
-		List<Categoria> findByPrecoLessThanEqual(@Param("preco")BigDecimal preco);
 	}
 
 

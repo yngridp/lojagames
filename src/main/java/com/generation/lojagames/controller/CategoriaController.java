@@ -1,6 +1,5 @@
 package com.generation.lojagames.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,43 +31,26 @@ public class CategoriaController {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getAll(){ 
 		return ResponseEntity.ok(categoriaRepository.findAll());
 }
 	@GetMapping("/{id}") 
 	public ResponseEntity<Categoria> getById(@PathVariable Long id){ 
-          
 		return categoriaRepository.findById(id) 
-	
 		      .map(resposta -> ResponseEntity.ok(resposta)) 
 		      .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 }
 	@GetMapping("/genero/{genero}") 
-	public ResponseEntity<List<Categoria>> getByGenero(@PathVariable String genero){
+	public ResponseEntity<List<Categoria>> getByProduto(@PathVariable String genero){
 		return ResponseEntity.ok(categoriaRepository.findAllByGeneroContainingIgnoreCase(genero));
 
-	//}
-	
-	//@GetMapping("/precoMaior")
-	// ResponseEntity<List<Categoria>> getCategoriaMaior500(@PathVariable BigDecimal preco) {
-		
-		// if(preco => 500) {
-		// categoriaRepository.findByPrecoGreaterThan(preco);
-		//  }
-		 // else {
-			  
-		//  }
-	}
-	
-	@GetMapping("/precoMenor")
-	public ResponseEntity<List<Categoria>> getCategoriaMenor500(@PathVariable BigDecimal preco) {
-		return ResponseEntity.ok(categoriaRepository.findByPrecoGreaterThan(preco));
 	}
 	
 	 @PostMapping
 		public ResponseEntity<Categoria> post(@Valid @RequestBody Categoria categoria){
-		 return  ResponseEntity.status(HttpStatus.OK).body(categoriaRepository.save(categoria));
+		 return  ResponseEntity.status(HttpStatus.CREATED).body(categoriaRepository.save(categoria));
 	}
 	   @PutMapping 
 	   public ResponseEntity<Categoria> put(@Valid @RequestBody Categoria categoria){ 
